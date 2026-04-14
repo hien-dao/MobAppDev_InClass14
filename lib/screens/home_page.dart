@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import '../services/fcm_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,11 +18,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     _fcmService.initialize(onData: (message) {
       setState(() {
         statusText = message.notification?.title ?? 'Payload received';
         imagePath = 'assets/${message.data['asset'] ?? 'default'}.png';
       });
+    });
+
+    _fcmService.getToken().then((token) {
+      debugPrint('FCM Token: $token');
     });
   }
 
